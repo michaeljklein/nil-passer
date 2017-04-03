@@ -1,8 +1,7 @@
 require 'gen/method'
 
 module Gen
-  class Gen::Code
-    include Gen::Methods
+  class Gen::Code < Gen::Method
     attr_accessor :local_var_count, :bound_procs, :bound_constants
 
     # lambda_block: call on code and (optionally) arguments to generate a lambda
