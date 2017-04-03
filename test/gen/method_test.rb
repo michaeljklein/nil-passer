@@ -1,45 +1,49 @@
 require 'test_helper'
 require 'gen/method'
 
-class DummyClass < Gen::Method
-end
+# class DummyClass < Gen::Method
+# end
 
 class GenMethodTest < Minitest::Test
-  def test_def_self
-    assert_not DummyClass.respond_to?(:example_method)
-    assert_not DummyClass.new.respond_to?(:example_method)
-    DummyClass.def_self :example_method, Proc.new{ true }
-    assert DummyClass.example_method
-    assert DummyClass.new.example_method
+  def setup
+    @dummy_class = Class.new Gen::Method
   end
 
-  def test_def_block_gen
+  def test_def_self_1
+    assert !@dummy_class.respond_to?(:example_method)
+    assert !@dummy_class.new.respond_to?(:example_method)
+    @dummy_class.def_self(:example_method){ true }
+    assert @dummy_class.example_method
+    assert @dummy_class.new.example_method
+  end
+
+  def test_def_block_gen_2
     (1..10).each do |n|
       range = (1..n).to_a
       vars  = range.map{|i| "x_#{i}"}
-      DummyClass.def_block_gen "proc_#{n}", "proc", vars
-      defined_method = DummyClass.method("proc_#{n}_block")
+      @dummy_class.def_block_gen "proc_#{n}", "proc", vars.to_s.gsub(/[\[\]\"]/, '')
+      defined_method = @dummy_class.method("proc_#{n}_block")
       proc_code      = vars.inspect.gsub(/\"/, '')
-      assert_equal defined_method.call(proc_code, range), range
+      assert_equal eval(defined_method.call(proc_code)).call(*range), range
     end
   end
 
-  def test_wrap_it
-    assert DummyClass.wrap_it{ true }
-    assert DummyClass.new.wrap_it{ true }
-    assert DummyClass.wrap_it{|x| x}.call(true)
-    assert DummyClass.new.wrap_it{|x| x}.call(true)
+  def test_wrap_it_3
+    assert @dummy_class.wrap_it{ true }
+    assert @dummy_class.new.wrap_it{ true }
+    assert @dummy_class.wrap_it{ Proc.new{|x| x} }.call(true)
+    assert @dummy_class.new.wrap_it{ Proc.new{|x| x} }.call(true)
   end
 
-  def test_indent_string
-    assert_equal DummyClass.indent("hi"), "  hi"
-    assert_equal DummyClass.indent(['hi', 'there'].join("\n")), ['  hi', '  there'].join("\n")
+  def test_indent_string_4
+    assert_equal @dummy_class.indent("hi"), "  hi"
+    assert_equal @dummy_class.indent(['hi', 'there'].join("\n")), ['  hi', '  there'].join("\n")
   end
 
-  def test_indent_strings
-    assert_equal DummyClass.indent(["hi"]), ["  hi"]
-    assert_equal DummyClass.indent([['hi', 'there'].join("\n"), 'you']), [['  hi', '  there'].join("\n"), '  you']
-    assert_equal DummyClass.indent(['hi', 'there']), ['  hi', '  there']
+  def test_indent_strings_5
+    assert_equal @dummy_class.indent(["hi"]), ["  hi"]
+    assert_equal @dummy_class.indent([['hi', 'there'].join("\n"), 'you']), [['  hi', '  there'].join("\n"), '  you']
+    assert_equal @dummy_class.indent(['hi', 'there']), ['  hi', '  there']
   end
 end
 
