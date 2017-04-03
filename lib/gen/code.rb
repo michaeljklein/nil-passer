@@ -13,6 +13,8 @@ module Gen
     # local_block: call on code to keep localized during execution
     def_block_gen :local, "#{self}.wrap_it", nil
 
+    def_block_gen :class_exec
+
     def initialize(local_var_count=0, bound_procs=[], bound_constants=[])
       @local_var_count = local_var_count
       @bound_procs     = bound_procs
@@ -21,14 +23,21 @@ module Gen
 
     # Evaluate a string using the locally bound procs and constants
     def bound_eval(source)
-      a_binding = binding
+      self.generate_binding.eval source
+    end
+
+    # Generate a binding containing the locally bound procs and constants
+    def generate_binding(a_binding=binding)
+      a_binding.local_variables do |local_var|
+        a_binding.local_variable_set local_var, nil
+      end
       @bound_procs.zip(0..1/0.0).each do |bound_proc, num|
         a_binding.local_variable_set "proc_#{num}",  bound_proc
       end
       @bound_constants.zip(0..1/0.0).each do |bound_const, num|
         a_binding.local_variable_set "const_#{num}", bound_const
       end
-      a_binding.eval source
+      a_binding
     end
 
     # The current local variable, of form: `"x_#{@local_var_count}"`

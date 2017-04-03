@@ -1,5 +1,4 @@
 require 'gen/code'
-require 'utils/self'
 
 module Gen
   class Gen::Predicate < Gen::Code
@@ -15,7 +14,7 @@ module Gen
       test_hash.map do |method, value|
         [self.new_local_var("#{input_var}.#{method}"),
         if value.is_a? Hash
-          make_eval_test(value)
+          make_test_code(value)
         elsif value.is_a? Proc
           "return false unless #{bind_proc  value}.call(#{local_var})"
         else
@@ -24,11 +23,40 @@ module Gen
       end.flatten << "return true"
     end
 
-    # Outputs a `Proc` generated from the given `Hash`
-    def make_test(test_hash)
+    def make_test(klass, test_name, test_hash)
       test_code = self.make_test_code test_hash
       test_code = self.proc_block test_code, 'x_0'
-      self.to_proc test_code
+
+      arg_vars  = []
+      args      = []
+      @bound_procs.zip(0..1/0.0).each do |bound_proc, num|
+        arg_vars << "proc_#{num}"
+        args     << bound_proc
+      end
+      @bound_constants.zip(0..1/0.0).each do |bound_const, num|
+        arg_vars << "const_#{num}"
+        args     << bound_const
+      end
+
+      test_code = self.proc_block test_code, arg_vars.to_s.gsub(/[\[\]\"]/, '').freeze
+      klass.class_exec do
+        define_method test_name, eval(test_code).call(*args)
+      end
+    end
+
+
+#     # Outputs a `Proc` generated from the given `Hash`
+#     def make_test(test_hash)
+#       test_code = self.make_test_code test_hash
+#       # puts test_code
+#       # test_code = ["def #{test_name}(x_0)", self.indent(test_code), "end"]
+#       puts test_code
+#       # puts test_code
+#       self.generate_binding
+#     end
+
+    def self.make_test(klass, test_name, test_hash)
+      self.new.make_test klass, test_name, test_hash
     end
   end
 end
