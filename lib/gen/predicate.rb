@@ -23,6 +23,7 @@ module Gen
       end.flatten << "return true"
     end
 
+    # given a class, a name for the test (instance) method, and a test hash, generate a predicate
     def make_test(klass, test_name, test_hash)
       test_code = self.make_test_code test_hash
       test_code = self.proc_block test_code, 'x_0'
@@ -44,17 +45,7 @@ module Gen
       end
     end
 
-
-#     # Outputs a `Proc` generated from the given `Hash`
-#     def make_test(test_hash)
-#       test_code = self.make_test_code test_hash
-#       # puts test_code
-#       # test_code = ["def #{test_name}(x_0)", self.indent(test_code), "end"]
-#       puts test_code
-#       # puts test_code
-#       self.generate_binding
-#     end
-
+    # An alias of `#make_test`
     def self.make_test(klass, test_name, test_hash)
       self.new.make_test klass, test_name, test_hash
     end
