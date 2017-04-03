@@ -104,7 +104,7 @@ class WrapMethod
     old_method = nil
     if self.singleton_method_exists? object, self.oldify_name(method_name)
       if rewrap
-        old_method = object.method old_method_name
+        old_method = object.method self.oldify_name(method_name)
       else
         return nil
       end
