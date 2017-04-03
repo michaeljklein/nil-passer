@@ -65,7 +65,7 @@ class WrapMethodTest < Minitest::Test
   def test_symbolic_singleton_methods_exist
     self.local_objects.each do |obj|
       obj.methods.each do |method_name|
-        assert WrapMethod.singleton_method_exists?(klass, method_name), [obj, method_name].inspect
+        assert WrapMethod.singleton_method_exists?(obj, method_name), [obj, method_name].inspect
       end
     end
   end
@@ -73,7 +73,7 @@ class WrapMethodTest < Minitest::Test
   def test_string_singleton_methods_exist
     self.local_objects.each do |obj|
       obj.methods.each do |method_name|
-        assert WrapMethod.singleton_method_exists?(klass, method_name.to_s), [obj, method_name].inspect
+        assert WrapMethod.singleton_method_exists?(obj, method_name.to_s), [obj, method_name].inspect
       end
     end
   end
