@@ -18,7 +18,7 @@ class MonitorMethod < WrapMethod
   # block takes |*args, &block| and returns [new_args, new_block] or falsey
   def self.method_monitor(args_predicate=nil, block_predicate=nil, &passed_block)
     unless passed_block&.parameters&.map{|x, _| x} == [:rest, :block]
-      raise ArgumentError, "must pass a block with arguments of the form: |*args, &block|"
+      raise ArgumentError, "must pass a block with arguments of the form: |*args, &block|, was of the form: #{passed_block&.parameters.inspect}"
     end
     lambda do |_|
       lambda do |*args, &block|
@@ -33,9 +33,9 @@ class MonitorMethod < WrapMethod
 
   # return a proc that takes an unbound method
   # block takes |bound_to, *args, &block| and returns [new_args, new_block] or falsey
-  def self.unbound_method_monitor(bound_predicate, args_predicate, block_predicate, &passed_block)
+  def self.unbound_method_monitor(bound_predicate=nil, args_predicate=nil, block_predicate=nil, &passed_block)
     unless passed_block.parameters.map{|x, _| x} == [:opt, :rest, :block]
-      raise ArgumentError, "must pass a block with arguments of the form: |bound_to, *args, &block|"
+      raise ArgumentError, "must pass a block with arguments of the form: |bound_to, *args, &block|, was of the form: #{passed_block&.parameters.inspect}"
     end
     lambda do |_|
       lambda do |bound_to|

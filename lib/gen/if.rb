@@ -1,5 +1,7 @@
 require 'gen/predicate'
 
+# This class is just sugar on Gen::Predicate
+
 module Gen
   class Gen::If < Gen::Predicate
     def self.[](*test_hashes)
