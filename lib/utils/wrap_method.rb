@@ -10,7 +10,6 @@ class WrapMethod
     "@@old_#{clean_method_name}".to_sym
   end
 
-
   def self.class_method_exists?(klass, method_name)
     if method_name.is_a?(Symbol) || method_name.is_a?(String)
       klass.respond_to? method_name
@@ -28,7 +27,7 @@ class WrapMethod
   end
 
   class << self
-      alias :singleton_method_exists? :class_method_exists?
+    alias :singleton_method_exists? :class_method_exists?
   end
 
   # The block is passed the previous method (frozen).

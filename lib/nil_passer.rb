@@ -3,63 +3,117 @@
 # require_relative 'code_gen'
 # require_relative 'self'
 
+class Gen::MonitorArgs
+  attr_accessor :block_given, :in, :only
+end
+
+class Gen::MonitorOptions
+  # recurse the options, replacing convenient options with pedantic ones
+  def recurse(options)
+    if options.is_a? Hash
+      options.map do |k, v|
+        k2, v2 = if self.respond_to? "options_#{k}"
+          self.send("options_#{k}", v) || [k, v]
+        end
+        v2 ||= self.recurse v2
+        [k2, v2]
+      end.to_h
+    end
+  end
+
+  def options_in(x)
+    if x
+      if x.is_a?(Proc) && x.arity == 1
+        # add proc(source_location) as prerequisite
+        [:source_location, x]
+      elsif x.is_a? Pathname
+        if x.extname == ".rb"
+          [:source_location, Proc.new{|source_location| source_location == x}]
+        else
+          [:source_location, Proc.new{|source_location| source_location.start_with?(x)}]
+        end
+      elsif x.is_a? String
+        x = Pathname.new x
+        if x.extname == ".rb"
+          [:source_location, Proc.new{|source_location| source_location == x}]
+        else
+          [:source_location, Proc.new{|source_location| source_location.start_with?(x)}]
+        end
+      else
+        raise ArgumentError, "Gen::MonitorOptions#in: Expected a single-argument Proc, a Pathname/String of a directory/source file location, or a list of those, got: #{x}"
+      end
+    end
+  end
+
+  def options_arguments(x)
+    if x.is_a? Hash
+      x.map do |k, v|
+        if /_(?<num>\d+)/ =~ k
+          if v.is_a? Proc
+            [k, Proc.new{|y| v.call(y[num.to_i])}]
+          else
+            [k, Proc.new{|y| v ==   y[num.to_i] }]
+          end
+        elsif "has_defaults" == k.to_s && [false, true].include?(v)
+          [k, Proc.new{|y| y.parameters.map{|z, _| z}.any?{|w| w == :opt} == v}]
+        else
+          [k, v]
+        end
+      end
+    end
+  end
+
+  def options_only(x)
+    if x.respond_to? :to_f
+      Proc.new{ rand <= x.to_f }
+    end
+  end
+end
+
+# idea is that if predicate, pass args to a Proc and continue on. used for logging, tests, etc.
+class Gen::Monitor < Gen::Code
+  def self.nice_options(options={})
+    options
+  end
+
+  def self.class_method(options={}, &block)
+  end
+
+  def self.instance_method(options={}, &block)
+    arguments_test = make_arguments_test (options[:arguments] || options[:args])
+    block_test     = make_block_test     options[:block_given]
+    in_test        = make_in_test        options[:in]
+    method_test    = make_method_test    options[:method]
+    only_test      = make_only_test      options[:only]
+    Proc.new do |method, *args, &block|
+      in
+      method
+      block
+      arguments
+      only
+    end
+  end
+end
+
+
+# class NilPasser < MethodMonitor
+#   @@rails_path ||= Rails.root.to_s
+
+#   # instance_method block_given: { arity: 1 }, in: Rails.root, only: 0.5 do |method, args, block|
+#   instance_method block_given: { arity: 1, in: Rails.root } do |method, args, block|
+#     begin
+#       block.call nil
+#     rescue Exception => e
+#       puts "found block at #{block.source_location}, error: #{e.inspect}"
+#     end
+#   end
+# end
+
+
 
 
 # class NiceOptions
 #   # here, we reformat a few options to match the format of MethodTester
-
-#     # if options[:arguments]
-#     #   arity
-#     #   count
-#     #   argument_tests
-#     #   arguments_test
-#     #   :_0 => proc or value
-#     #   :_1 => proc or value
-#     #   has_defaults
-#     # end
-
-#     # if options[:block]
-#     #   block_options = options[:block]
-#     #   self.add_prerequisite_from_proc_or_equal [:block], Proc, block_options[:is]
-#     #   self.add_prerequisite_from_proc_or_equal [:block, :arity], Fixnum, block_options[:arity]
-#     #   self.add_prerequisite_from_proc_or_equal [:block, :binding], Binding, block_options[:binding]
-#     #   self.add_prerequisite_from_proc_or_equal [:block, :hash], Fixnum, block_options[:hash]
-#     #   self.add_prerequisite_from_proc_or_equal [:block, :lambda], Proc, block_options[:lambda]
-#     #   self.add_prerequisite_from_proc_or_equal [:block, :source_location], Pathname, block_options[:source_location]
-#     #   parameters
-#     # end
-
-#     # if options[:in]
-#     #   if options[:in].is_a?(Proc) && options[:in].arity == 1
-#     #     # add proc(source_location) as prerequisite
-#     #     self.add_prerequisite :source_location, options[:in]
-#     #   elsif options[:in].is_a? Pathname
-#     #     if options[:in].extname == ".rb"
-#     #       self.add_prerequisite :source_location, Proc.new{|source_location| source_location == options[:in]}
-#     #     else
-#     #       self.add_prerequisite :source_location, Proc.new{|source_location| source_location.start_with?(options[:in])}
-#     #     end
-#     #   elsif options[:in].is_a? String
-#     #     options[:in] = Pathname.new options[:in]
-#     #     if options[:in].extname == ".rb"
-#     #       self.add_prerequisite :source_location, Proc.new{|source_location| source_location == options[:in]}
-#     #     else
-#     #       self.add_prerequisite :source_location, Proc.new{|source_location| source_location.start_with?(options[:in])}
-#     #     end
-#     #   else
-#     #     raise ArgumentError, "options[:in]: Expected a single-argument Proc or a Pathname/String of a directory/source file location, got: #{options[:in]}"
-#     #   end
-#     # end
-
-#     # if options[:called_on]
-#     #   if options[:called_on].is_a? Proc
-#     #     # add proc(called_on) as prerequisite
-#     #   else
-#     #     # add called_on == value as a prerequisite
-#     #   end
-#     # end
-#   # end
-
 
 #   # assume applies to all class/instance variables of given symbol (when called like MethodMonitor.monitor Klass, :sym)
 #   # default monitors do nothing
