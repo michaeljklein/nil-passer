@@ -30,7 +30,7 @@ class WrapMethodTest < Minitest::Test
 
   def test_symbolic_class_methods_exist_1
     self.local_classes.each do |klass|
-      klass.methods.each do |method_name|
+      klass.public_methods.each do |method_name|
         assert WrapMethod.class_method_exists?(klass, method_name), [klass, method_name, klass.respond_to?(method_name)].inspect
       end
     end
@@ -38,7 +38,7 @@ class WrapMethodTest < Minitest::Test
 
   def test_string_class_methods_exist_2
     self.local_classes.each do |klass|
-      klass.methods.each do |method_name|
+      klass.public_methods.each do |method_name|
         assert WrapMethod.class_method_exists?(klass, method_name.to_s), [klass, method_name, klass.respond_to?(method_name)].inspect
       end
     end
@@ -46,7 +46,7 @@ class WrapMethodTest < Minitest::Test
 
   def test_symbolic_instance_methods_exist_3
     self.local_classes.each do |klass|
-      klass.instance_methods.each do |method_name|
+      klass.public_instance_methods.each do |method_name|
         assert_equal WrapMethod.instance_method_exists?(klass, method_name), klass.method_defined?(method_name), [klass, method_name]
       end
     end
@@ -54,7 +54,7 @@ class WrapMethodTest < Minitest::Test
 
   def test_string_instance_methods_exist_4
     self.local_classes.each do |klass|
-      klass.instance_methods.each do |method_name|
+      klass.public_instance_methods.each do |method_name|
         assert_equal WrapMethod.instance_method_exists?(klass, method_name.to_s), klass.method_defined?(method_name), [klass, method_name]
       end
     end
