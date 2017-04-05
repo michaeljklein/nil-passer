@@ -3,97 +3,97 @@
 # require_relative 'code_gen'
 # require_relative 'self'
 
-class Gen::MonitorArgs
-  attr_accessor :block_given, :in, :only
-end
+# class Gen::MonitorArgs
+#   attr_accessor :block_given, :in, :only
+# end
 
-class Gen::MonitorOptions
-  # recurse the options, replacing convenient options with pedantic ones
-  def recurse(options)
-    if options.is_a? Hash
-      options.map do |k, v|
-        k2, v2 = if self.respond_to? "options_#{k}"
-          self.send("options_#{k}", v) || [k, v]
-        end
-        v2 ||= self.recurse v2
-        [k2, v2]
-      end.to_h
-    end
-  end
+# class Gen::MonitorOptions
+#   # recurse the options, replacing convenient options with pedantic ones
+#   def recurse(options)
+#     if options.is_a? Hash
+#       options.map do |k, v|
+#         k2, v2 = if self.respond_to? "options_#{k}"
+#           self.send("options_#{k}", v) || [k, v]
+#         end
+#         v2 ||= self.recurse v2
+#         [k2, v2]
+#       end.to_h
+#     end
+#   end
 
-  def options_in(x)
-    if x
-      if x.is_a?(Proc) && x.arity == 1
-        # add proc(source_location) as prerequisite
-        [:source_location, x]
-      elsif x.is_a? Pathname
-        if x.extname == ".rb"
-          [:source_location, Proc.new{|source_location| source_location == x}]
-        else
-          [:source_location, Proc.new{|source_location| source_location.start_with?(x)}]
-        end
-      elsif x.is_a? String
-        x = Pathname.new x
-        if x.extname == ".rb"
-          [:source_location, Proc.new{|source_location| source_location == x}]
-        else
-          [:source_location, Proc.new{|source_location| source_location.start_with?(x)}]
-        end
-      else
-        raise ArgumentError, "Gen::MonitorOptions#in: Expected a single-argument Proc, a Pathname/String of a directory/source file location, or a list of those, got: #{x}"
-      end
-    end
-  end
+#   def options_in(x)
+#     if x
+#       if x.is_a?(Proc) && x.arity == 1
+#         # add proc(source_location) as prerequisite
+#         [:source_location, x]
+#       elsif x.is_a? Pathname
+#         if x.extname == ".rb"
+#           [:source_location, Proc.new{|source_location| source_location == x}]
+#         else
+#           [:source_location, Proc.new{|source_location| source_location.start_with?(x)}]
+#         end
+#       elsif x.is_a? String
+#         x = Pathname.new x
+#         if x.extname == ".rb"
+#           [:source_location, Proc.new{|source_location| source_location == x}]
+#         else
+#           [:source_location, Proc.new{|source_location| source_location.start_with?(x)}]
+#         end
+#       else
+#         raise ArgumentError, "Gen::MonitorOptions#in: Expected a single-argument Proc, a Pathname/String of a directory/source file location, or a list of those, got: #{x}"
+#       end
+#     end
+#   end
 
-  def options_arguments(x)
-    if x.is_a? Hash
-      x.map do |k, v|
-        if /_(?<num>\d+)/ =~ k
-          if v.is_a? Proc
-            [k, Proc.new{|y| v.call(y[num.to_i])}]
-          else
-            [k, Proc.new{|y| v ==   y[num.to_i] }]
-          end
-        elsif "has_defaults" == k.to_s && [false, true].include?(v)
-          [k, Proc.new{|y| y.parameters.map{|z, _| z}.any?{|w| w == :opt} == v}]
-        else
-          [k, v]
-        end
-      end
-    end
-  end
+#   def options_arguments(x)
+#     if x.is_a? Hash
+#       x.map do |k, v|
+#         if /_(?<num>\d+)/ =~ k
+#           if v.is_a? Proc
+#             [k, Proc.new{|y| v.call(y[num.to_i])}]
+#           else
+#             [k, Proc.new{|y| v ==   y[num.to_i] }]
+#           end
+#         elsif "has_defaults" == k.to_s && [false, true].include?(v)
+#           [k, Proc.new{|y| y.parameters.map{|z, _| z}.any?{|w| w == :opt} == v}]
+#         else
+#           [k, v]
+#         end
+#       end
+#     end
+#   end
 
-  def options_only(x)
-    if x.respond_to? :to_f
-      Proc.new{ rand <= x.to_f }
-    end
-  end
-end
+#   def options_only(x)
+#     if x.respond_to? :to_f
+#       Proc.new{ rand <= x.to_f }
+#     end
+#   end
+# end
 
-# idea is that if predicate, pass args to a Proc and continue on. used for logging, tests, etc.
-class Gen::Monitor < Gen::Code
-  def self.nice_options(options={})
-    options
-  end
+# # idea is that if predicate, pass args to a Proc and continue on. used for logging, tests, etc.
+# class Gen::Monitor < Gen::Code
+#   def self.nice_options(options={})
+#     options
+#   end
 
-  def self.class_method(options={}, &block)
-  end
+#   def self.class_method(options={}, &block)
+#   end
 
-  def self.instance_method(options={}, &block)
-    arguments_test = make_arguments_test (options[:arguments] || options[:args])
-    block_test     = make_block_test     options[:block_given]
-    in_test        = make_in_test        options[:in]
-    method_test    = make_method_test    options[:method]
-    only_test      = make_only_test      options[:only]
-    Proc.new do |method, *args, &block|
-      in
-      method
-      block
-      arguments
-      only
-    end
-  end
-end
+#   def self.instance_method(options={}, &block)
+#     arguments_test = make_arguments_test (options[:arguments] || options[:args])
+#     block_test     = make_block_test     options[:block_given]
+#     in_test        = make_in_test        options[:in]
+#     method_test    = make_method_test    options[:method]
+#     only_test      = make_only_test      options[:only]
+#     Proc.new do |method, *args, &block|
+#       in
+#       method
+#       block
+#       arguments
+#       only
+#     end
+#   end
+# end
 
 
 # class NilPasser < MethodMonitor
