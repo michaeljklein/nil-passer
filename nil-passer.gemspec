@@ -7,7 +7,6 @@ Gem::Specification.new do |s|
   s.authors     = ["Michael Klein"]
   s.email       = "lambdamichael@gmail.com"
   s.files       = ["lib/nil_passer.rb"]
-  s.homepage    =
-    'http://github.com/michaeljklein/nil-passer'
-  s.license       = 'MIT'
+  s.homepage    = "https://michaeljklein.github.io/nil-passer/"
+  s.license     = 'MIT'
 end
