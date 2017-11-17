@@ -1,4 +1,4 @@
-# Nil Passer [![Build Status](https://travis-ci.org/michaeljklein/nil-passer.svg?branch=master)](https://travis-ci.org/michaeljklein/nil-passer)
+# Nil-Passer
 
 Ever been sick of blocks not handling nil in Ruby, or more specifically Rails?
 
@@ -17,7 +17,7 @@ From [the tests](https://github.com/michaeljklein/nil-passer/blob/master/test/te
 
 ## Good
 
-This is the control: we provide the caller's location and the identity (function) block:
+This is the control: we provide the caller's location and the identity (function) block ([source](https://github.com/michaeljklein/nil-passer/blob/master/test/test_nil_passer.rb#L45)):
 
 ```
   def test_test_ignores_good_block
@@ -30,7 +30,7 @@ This is the control: we provide the caller's location and the identity (function
 
 ## Bad
 
-This is a simple exception-handling case, where the block accepts `nil` but always raises an exception:
+This is a simple exception-handling case, where the block accepts `nil` but always raises an exception ([source](https://github.com/michaeljklein/nil-passer/blob/master/test/test_nil_passer.rb#L51)):
 
 ```
   def test_test_catches_bad_block
@@ -43,7 +43,7 @@ This is a simple exception-handling case, where the block accepts `nil` but alwa
 
 ## Subtle
 
-This is an example of a block that _only_ raises an exception when passed `nil`:
+This is an example of a block that _only_ raises an exception when passed `nil` ([source](https://github.com/michaeljklein/nil-passer/blob/master/test/test_nil_passer.rb#L57)):
 
 ```
   def test_test_catches_subtle_block
