@@ -1,4 +1,4 @@
-# Nil-Passer
+# Nil-Passer [![Build Status](https://travis-ci.org/michaeljklein/nil-passer.svg?branch=master)](https://travis-ci.org/michaeljklein/nil-passer)
 
 Ever been sick of blocks not handling nil in Ruby, or more specifically Rails?
 
