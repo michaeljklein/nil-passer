@@ -9,3 +9,49 @@ Each block passed is passed `nil` and the execution _usually_ continues normally
 During or after execution, you can `grep -F '^[no_nil]'` on your logs to get all the results.
 
 Loosely inspired by the [`bullet`](https://github.com/flyerhzm/bullet) gem.
+
+# Examples
+
+From [the tests](https://github.com/michaeljklein/nil-passer/blob/master/test/test_nil_passer.rb), we have example usage for "good, bad, and subtle" blocks:
+
+
+## Good
+
+This is the control: we provide the caller's location and the identity (function) block:
+
+```
+  def test_test_ignores_good_block
+    assert @log.blank?
+    NilPasser.test [Rails.path], Proc.new{|x| x}
+    assert @log.blank?
+  end
+```
+
+
+## Bad
+
+This is a simple exception-handling case, where the block accepts `nil` but always raises an exception:
+
+```
+  def test_test_catches_bad_block
+    assert  @log.blank?
+    NilPasser.test [Rails.path], Proc.new{|x| (raise "hi")}
+    assert !@log.blank?
+  end
+```
+
+
+## Subtle
+
+This is an example of a block that _only_ raises an exception when passed `nil`:
+
+```
+  def test_test_catches_subtle_block
+    assert  @log.blank?
+    NilPasser.test [Rails.path], Proc.new{|x| x.nil? && (raise "hi")}
+    assert !@log.blank?
+  end
+```
+
+
+
