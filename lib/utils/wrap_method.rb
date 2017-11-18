@@ -11,19 +11,11 @@ class WrapMethod
   end
 
   def self.class_method_exists?(klass, method_name)
-    if method_name.is_a?(Symbol) || method_name.is_a?(String)
-      klass.respond_to? method_name
-    else
-      false
-    end
+    klass.respond_to? method_name
   end
 
   def self.instance_method_exists?(klass, method_name)
-    if method_name.is_a?(Symbol) || method_name.is_a?(String)
-      klass.method_defined? method_name
-    else
-      false
-    end
+    klass.method_defined? method_name
   end
 
   class << self

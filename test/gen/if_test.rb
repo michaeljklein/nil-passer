@@ -45,5 +45,28 @@ class GenIfTest < Minitest::Test
       assert_equal result, tester.call(x), [x, hash, result]
     end
   end
+
+  def test_nil
+    tester = Gen::If[nil]
+    @test_cases.each do |x, _, _|
+      assert tester.call(x)
+    end
+  end
+
+  def test_empty_array
+    tester = Gen::If[[]]
+    @test_cases.each do |x, _, _|
+      assert tester.call(x)
+    end
+  end
+
+  def test_direct_array_inputs
+    @test_cases.each do |x, hash, result|
+      hash_list = [*hash].map{|y, z| {y => z}}
+      tester = Gen::If[hash_list]
+      assert tester.call(x), [x, hash, result]
+    end
+  end
+
 end
 

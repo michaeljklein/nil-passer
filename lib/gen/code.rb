@@ -31,11 +31,11 @@ module Gen
       a_binding.local_variables do |local_var|
         a_binding.local_variable_set local_var, nil
       end
-      @bound_procs.zip(0..Float::INFINITY).each do |bound_proc, num|
-        a_binding.local_variable_set "proc_#{num}",  bound_proc
+      @bound_procs.each_with_index do |bound_proc, index|
+        a_binding.local_variable_set "proc_#{index}",  bound_proc
       end
-      @bound_constants.zip(0..Float::INFINITY).each do |bound_const, num|
-        a_binding.local_variable_set "const_#{num}", bound_const
+      @bound_constants.each_with_index do |bound_const, index|
+        a_binding.local_variable_set "const_#{index}", bound_const
       end
       a_binding
     end

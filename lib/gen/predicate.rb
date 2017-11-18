@@ -30,12 +30,12 @@ module Gen
 
       arg_vars  = []
       args      = []
-      @bound_procs.zip(0..Float::INFINITY).each do |bound_proc, num|
-        arg_vars << "proc_#{num}"
+      @bound_procs.each_with_index do |bound_proc, index|
+        arg_vars << "proc_#{index}"
         args     << bound_proc
       end
-      @bound_constants.zip(0..Float::INFINITY).each do |bound_const, num|
-        arg_vars << "const_#{num}"
+      @bound_constants.each_with_index do |bound_const, index|
+        arg_vars << "const_#{index}"
         args     << bound_const
       end
 
@@ -47,8 +47,9 @@ module Gen
 
     # An alias of `#make_test`
     def self.make_test(klass, test_name, test_hash)
-      self.new.make_test klass, test_name, test_hash
+      self.new.make_test(klass, test_name, test_hash)
     end
+
   end
 end
 

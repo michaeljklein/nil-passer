@@ -232,5 +232,7 @@ class WrapMethodTest < Minitest::Test
     assert_equal (obj.methods - original_singleton_methods), [WrapMethod.oldify_name(:a_singleton_method)]
   end
 
+
+
 end
 
