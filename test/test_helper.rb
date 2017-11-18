@@ -10,5 +10,7 @@ Minitest::Reporters.use! [
 ]
 
 require 'simplecov'
-SimpleCov.start
+SimpleCov.start do
+  add_filter "/test/"
+end
 
