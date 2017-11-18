@@ -1,4 +1,15 @@
-# Nil-Passer [![Build Status](https://travis-ci.org/michaeljklein/nil-passer.svg?branch=master)](https://travis-ci.org/michaeljklein/nil-passer)
+# Nil-Passer 
+
+## Status
+
+[![Build Status](https://travis-ci.org/michaeljklein/nil-passer.svg?branch=master)](https://travis-ci.org/michaeljklein/nil-passer)
+
+[![Maintainability](https://api.codeclimate.com/v1/badges/4723ba66092afa0a20e1/maintainability)](https://codeclimate.com/github/michaeljklein/nil-passer/maintainability)
+
+[![Test Coverage](https://api.codeclimate.com/v1/badges/4723ba66092afa0a20e1/test_coverage)](https://codeclimate.com/github/michaeljklein/nil-passer/test_coverage)
+
+
+## Introduction
 
 Ever been sick of blocks not handling nil in Ruby, or more specifically Rails?
 
@@ -9,6 +20,7 @@ Each block passed is passed `nil` and the execution _usually_ continues normally
 During or after execution, you can `grep -F '^[no_nil]'` on your logs to get all the results.
 
 Loosely inspired by the [`bullet`](https://github.com/flyerhzm/bullet) gem.
+
 
 # Examples
 
