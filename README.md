@@ -12,7 +12,7 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/8ec82f7c480c412587116366b89189bf)](https://www.codacy.com/app/michaeljklein/nil-passer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=michaeljklein/nil-passer&amp;utm_campaign=Badge_Grade)
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/nil-passer/utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/nil-passer/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
 ## Introduction
