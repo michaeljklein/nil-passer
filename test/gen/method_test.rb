@@ -15,7 +15,7 @@ class GenMethodTest < Minitest::Test
   end
 
   def test_def_block_gen_2
-    (1..10).each do |n|
+    (1..5).each do |n|
       range = (1..n).to_a
       vars  = range.map{|i| "x_#{i}"}
       @dummy_class.def_block_gen "proc_#{n}", "proc", vars.to_s.gsub(/[\[\]\"]/, '')

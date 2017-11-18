@@ -20,12 +20,16 @@ class WrapMethodTest < Minitest::Test
     self.local_objects.length
   end
 
+  def teardown
+    ObjectSpace.garbage_collect
+  end
+
   def local_classes
-    @@local_classes ||= ObjectSpace.each_object.select{|obj|  obj.is_a? Class}.to_a.freeze
+    @@local_classes ||= ObjectSpace.each_object.lazy.take(256).select{|obj|  obj.is_a? Class}.to_a.freeze
   end
 
   def local_objects
-    @@local_objects ||= ObjectSpace.each_object.select{|obj| !obj.is_a?(Class) && !obj.is_a?(Module)}.to_a.freeze
+    @@local_objects ||= ObjectSpace.each_object.lazy.take(256).select{|obj| !obj.is_a?(Class) && !obj.is_a?(Module)}.to_a.freeze
   end
 
   def test_symbolic_class_methods_exist_1
@@ -65,9 +69,13 @@ class WrapMethodTest < Minitest::Test
     # The exhaustive check is great, but too slow so we require that the method names be unique to speed it up.
     known_methods = {}
     self.local_objects.each do |obj|
-      obj.public_methods.select{|method| known_methods[method].nil?}.each do |method_name|
-        known_methods[method_name] = true
-        assert_equal WrapMethod.singleton_method_exists?(obj, method_name), obj.respond_to?(method_name), [obj, method_name].inspect
+      if obj&.respond_to?(:public_methods)
+        obj.public_methods.each do |method_name|
+          if known_methods[method_name.to_sym].nil?
+            known_methods[method_name.to_sym] = true
+            assert_equal WrapMethod.singleton_method_exists?(obj, method_name), obj.respond_to?(method_name), [obj, method_name].inspect
+          end
+        end
       end
     end
   end
@@ -77,9 +85,13 @@ class WrapMethodTest < Minitest::Test
     # The exhaustive check is great, but too slow so we require that the method names be unique to speed it up.
     known_methods = {}
     self.local_objects.each do |obj|
-      obj.public_methods.select{|method| known_methods[method].nil?}.each do |method_name|
-        known_methods[method_name] = true
-        assert_equal WrapMethod.singleton_method_exists?(obj, method_name.to_s), obj.respond_to?(method_name), [obj, method_name].inspect
+      if obj&.respond_to?(:public_methods)
+        obj.public_methods.each do |method_name|
+          if known_methods[method_name.to_sym].nil?
+            known_methods[method_name.to_sym] = true
+            assert_equal WrapMethod.singleton_method_exists?(obj, method_name.to_s), obj.respond_to?(method_name), [obj, method_name].inspect
+          end
+        end
       end
     end
   end
@@ -109,15 +121,15 @@ class WrapMethodTest < Minitest::Test
   end
 
   def test_oldify_all_singleton_methods_9
-    self.local_objects.select do |obj|
-      !obj.frozen?
-      end.each do |obj|
-      obj.methods.each do |method_name|
-        oldified_name = WrapMethod.oldify_name method_name
-        begin
-          obj.define_singleton_method oldified_name, Proc.new{ true }
-          assert obj.method(oldified_name).call
-        rescue TypeError
+    self.local_objects.each do |obj|
+      unless obj.frozen?
+        obj.methods.each do |method_name|
+          oldified_name = WrapMethod.oldify_name method_name
+          begin
+            obj.define_singleton_method oldified_name, Proc.new{ true }
+            assert obj.method(oldified_name).call
+          rescue TypeError
+          end
         end
       end
     end
@@ -182,9 +194,12 @@ class WrapMethodTest < Minitest::Test
   def test_rewrap_does_not_nest_on_class_19
     original_class_methods = @dummy_class.methods
     assert_equal @dummy_class.a_class_method, 'a_class_method'
+    warn_level = $VERBOSE
+    $VERBOSE = nil
     WrapMethod.raw_class_wrap(@dummy_class, :a_class_method, true){|old_method| Proc.new{'a_wrapped_class_method'}}
     assert_equal @dummy_class.a_class_method, 'a_wrapped_class_method'
     WrapMethod.raw_class_wrap(@dummy_class, :a_class_method, true){|old_method| Proc.new{'a_wrapped_class_method2'}}
+    $VERBOSE = warn_level
     assert_equal @dummy_class.a_class_method, 'a_wrapped_class_method2'
     assert_equal (@dummy_class.methods - original_class_methods), [WrapMethod.oldify_name(:a_class_method)]
   end
@@ -192,9 +207,12 @@ class WrapMethodTest < Minitest::Test
   def test_rewrap_does_not_nest_on_instance_20
     original_instance_methods = @dummy_class.instance_methods
     assert_equal @dummy_class.new.an_instance_method, 'an_instance_method'
+    warn_level = $VERBOSE
+    $VERBOSE = nil
     WrapMethod.raw_instance_wrap(@dummy_class, :an_instance_method, true){|old_method| Proc.new{'a_wrapped_instance_method'}}
     assert_equal @dummy_class.new.an_instance_method, 'a_wrapped_instance_method'
     WrapMethod.raw_instance_wrap(@dummy_class, :an_instance_method, true){|old_method| Proc.new{'a_wrapped_instance_method2'}}
+    $VERBOSE = warn_level
     assert_equal @dummy_class.new.an_instance_method, 'a_wrapped_instance_method2'
     assert_equal (@dummy_class.instance_methods - original_instance_methods), [WrapMethod.oldify_name(:an_instance_method)]
   end
@@ -204,11 +222,15 @@ class WrapMethodTest < Minitest::Test
     obj.add_singleton_method
     original_singleton_methods = obj.methods
     assert_equal obj.a_singleton_method, 'a_singleton_method'
+    warn_level = $VERBOSE
+    $VERBOSE = nil
     WrapMethod.raw_singleton_wrap(obj, :a_singleton_method, true){|old_method| Proc.new{'a_wrapped_singleton_method'}}
     assert_equal obj.a_singleton_method, 'a_wrapped_singleton_method'
     WrapMethod.raw_singleton_wrap(obj, :a_singleton_method, true){|old_method| Proc.new{'a_wrapped_singleton_method2'}}
+    $VERBOSE = warn_level
     assert_equal obj.a_singleton_method, 'a_wrapped_singleton_method2'
     assert_equal (obj.methods - original_singleton_methods), [WrapMethod.oldify_name(:a_singleton_method)]
   end
+
 end
 

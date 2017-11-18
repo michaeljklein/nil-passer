@@ -6,6 +6,11 @@ class GenCodeTest < Minitest::Test
     @code_gen = Gen::Code.new
   end
 
+  def teardown
+    @code_gen.freeze
+    ObjectSpace.garbage_collect
+  end
+
   def test_lambda_block_1
     lambda_code = @code_gen.lambda_block("x", "x")
     a_lambda    = @code_gen.bound_eval lambda_code
@@ -30,7 +35,7 @@ class GenCodeTest < Minitest::Test
   end
 
   def test_chaining_local_vars_4
-    chained_code = (1..10).map do |n|
+    chained_code = (1..5).map do |n|
       prev_local_var = @code_gen.local_var
       @code_gen.new_local_var prev_local_var
     end

@@ -54,7 +54,7 @@ module Gen
     # Bound within `#bound_eval` as `proc_#{position in @bound_procs}`
     def bind_proc(a_proc)
       unless a_proc.is_a? Proc
-        raise ArgumentError, "#{a_proc.inspect} is not a Proc, it is a #{a_proc.class}"
+        raise ArgumentError, "#{a_proc.inspect} is not a Proc, it is a #{a_proc.class}".freeze
       end
       proc_string = "proc_#{@bound_procs.length}"
       @bound_procs     << a_proc.freeze

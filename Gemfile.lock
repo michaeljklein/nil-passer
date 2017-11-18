@@ -57,6 +57,8 @@ GEM
     mime-types (1.25.1)
     mini_portile2 (2.1.0)
     minitest (5.9.1)
+    minitest-color (0.0.2)
+      minitest (~> 5)
     minitest-reporters (1.1.12)
       ansi
       builder
@@ -109,6 +111,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  minitest-color
   minitest-reporters
   nil-passer!
   rails (~> 4.2.7)

@@ -129,5 +129,6 @@ class WrapMethod
     end
     self.raw_singleton_wrap object, method_name, rewrap=false, &block
   end
+
 end
 
