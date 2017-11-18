@@ -1,9 +1,6 @@
 require 'test_helper'
 require 'gen/method'
 
-# class DummyClass < Gen::Method
-# end
-
 class GenMethodTest < Minitest::Test
   def setup
     @dummy_class = Class.new Gen::Method

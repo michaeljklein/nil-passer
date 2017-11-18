@@ -17,8 +17,8 @@ class MonitorMethod < WrapMethod
   # return a proc that takes a method
   # block takes |*args, &block| and returns [new_args, new_block] or falsey
   def self.method_monitor(args_predicate=nil, block_predicate=nil, &passed_block)
-    unless passed_block&.parameters&.map{|x, _| x} == [:rest, :block]
-      raise ArgumentError, "must pass a block with arguments of the form: |*args, &block|, was of the form: #{passed_block&.parameters.inspect}"
+    unless passed_block.parameters.map(&:first) == [:rest, :block]
+      raise ArgumentError, "must pass a block with arguments of the form: |*args, &block|, was of the form: #{passed_block&.parameters.inspect}".freeze
     end
     lambda do |_|
       lambda do |*args, &block|
@@ -34,8 +34,8 @@ class MonitorMethod < WrapMethod
   # return a proc that takes an unbound method
   # block takes |bound_to, *args, &block| and returns [new_args, new_block] or falsey
   def self.unbound_method_monitor(bound_predicate=nil, args_predicate=nil, block_predicate=nil, &passed_block)
-    unless passed_block.parameters.map{|x, _| x} == [:opt, :rest, :block]
-      raise ArgumentError, "must pass a block with arguments of the form: |bound_to, *args, &block|, was of the form: #{passed_block&.parameters.inspect}"
+    unless passed_block.parameters.map(&:first) == [:opt, :rest, :block]
+      raise ArgumentError, "must pass a block with arguments of the form: |bound_to, *args, &block|, was of the form: #{passed_block&.parameters.inspect}".freeze
     end
     lambda do |_|
       lambda do |bound_to|
@@ -137,20 +137,6 @@ class MonitorMethod < WrapMethod
     else
       object.public_methods.each do |method|
         self.singleton_monitor   object, method, &block
-      end
-    end
-  end
-
-  def self.instances_monitors(object_predicate=nil, method_predicate=nil, &block)
-    if object_predicate
-      ObjectSpace.each_object(Object) do |object|
-        if object_predicate.call  object
-          self.singleton_monitors object, method_predicate, &block
-        end
-      end
-    else
-      ObjectSpace.each_object(Object) do |object|
-        self.singleton_monitors   object, method_predicate, &block
       end
     end
   end

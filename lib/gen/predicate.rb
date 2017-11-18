@@ -30,11 +30,11 @@ module Gen
 
       arg_vars  = []
       args      = []
-      @bound_procs.zip(0..1/0.0).each do |bound_proc, num|
+      @bound_procs.zip(0..Float::INFINITY).each do |bound_proc, num|
         arg_vars << "proc_#{num}"
         args     << bound_proc
       end
-      @bound_constants.zip(0..1/0.0).each do |bound_const, num|
+      @bound_constants.zip(0..Float::INFINITY).each do |bound_const, num|
         arg_vars << "const_#{num}"
         args     << bound_const
       end

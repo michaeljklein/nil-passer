@@ -57,7 +57,7 @@ class WrapMethod
 
   def self.class_wrap!(klass, method_name, &block)
     unless self.class_method_exists? klass, method_name
-      raise ArgumentError, "WrapMethod::class_wrap!: #{klass}::#{method_name} does not exist"
+      raise ArgumentError, "WrapMethod::class_wrap!: #{klass}::#{method_name} does not exist".freeze
     end
     self.raw_class_wrap klass, method_name, &block
   end
@@ -91,7 +91,7 @@ class WrapMethod
   # See `WrapMethod::raw_instance_wrap`. This adds a check that the method exists and raises an `ArgumentError` if it doesn't
   def self.instance_wrap!(klass, method_name, rewrap=false, &block)
     unless self.instance_method_exists? klass, method_name
-      raise ArgumentError, "WrapMethod::instance_wrap!: #{klass}::#{method_name} does not exist"
+      raise ArgumentError, "WrapMethod::instance_wrap!: #{klass}::#{method_name} does not exist".freeze
     end
     self.raw_instance_wrap klass, method_name, rewrap, &block
   end
@@ -125,7 +125,7 @@ class WrapMethod
   # See `WrapMethod::raw_singleton_wrap`. This adds a check that the method exists and raises an `ArgumentError` if it doesn't
   def self.singleton_wrap!(object, method_name, rewrap=false, &block)
     unless self.singleton_method_exists? object, method_name
-      raise ArgumentError, "WrapMethod::singleton_wrap!: #{object}::#{method_name} does not exist"
+      raise ArgumentError, "WrapMethod::singleton_wrap!: #{object}::#{method_name} does not exist".freeze
     end
     self.raw_singleton_wrap object, method_name, rewrap=false, &block
   end

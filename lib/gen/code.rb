@@ -31,10 +31,10 @@ module Gen
       a_binding.local_variables do |local_var|
         a_binding.local_variable_set local_var, nil
       end
-      @bound_procs.zip(0..1/0.0).each do |bound_proc, num|
+      @bound_procs.zip(0..Float::INFINITY).each do |bound_proc, num|
         a_binding.local_variable_set "proc_#{num}",  bound_proc
       end
-      @bound_constants.zip(0..1/0.0).each do |bound_const, num|
+      @bound_constants.zip(0..Float::INFINITY).each do |bound_const, num|
         a_binding.local_variable_set "const_#{num}", bound_const
       end
       a_binding
