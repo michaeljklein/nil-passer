@@ -9,6 +9,12 @@ Minitest::Reporters.use! [
   Minitest::Reporters::MeanTimeReporter.new
 ]
 
+
 require 'simplecov'
-SimpleCov.start
+
+SimpleCov.start do
+  add_filter "/test/"
+  add_group "Generators", (Dir["lib/gen/**/*.rb"] + ["lib/gen.rb"])
+  add_group "Utils", "lib/utils"
+end
 
