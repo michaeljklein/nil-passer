@@ -1,3 +1,24 @@
 language: ruby
+cache: bundler
+
 rvm:
   - 2.3.1
+
+before_install:
+  - gem update --system
+
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
+script:
+  - bundle exec rake $TASKS
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+
+env:
+  global:
+    - CC_TEST_REPORTER_ID=ebe8c89484407c039bfe9cd6c766dd415018d553f09c0acd606787f09bfd41a7
+    - CF_RUN_PERM_SPECS=false

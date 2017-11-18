@@ -8,3 +8,7 @@ Minitest::Reporters.use! [
   Minitest::Reporters::ProgressReporter.new,
   Minitest::Reporters::MeanTimeReporter.new
 ]
+
+require 'simplecov'
+SimpleCov.start
+
