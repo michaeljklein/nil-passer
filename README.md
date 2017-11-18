@@ -8,6 +8,8 @@
 
 [![Test Coverage](https://api.codeclimate.com/v1/badges/4723ba66092afa0a20e1/test_coverage)](https://codeclimate.com/github/michaeljklein/nil-passer/test_coverage)
 
+[![Gem Version](https://badge.fury.io/rb/nil-passer.svg)](https://badge.fury.io/rb/nil-passer)
+
 
 ## Introduction
 
