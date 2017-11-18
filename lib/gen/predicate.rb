@@ -1,10 +1,13 @@
 require 'gen/code'
 
 module Gen
-  class Gen::Predicate < Gen::Code
-    # you enter a nested hash where the branches define the execution path and the leaves either have a value 
-    # (which will be compared with the actual value) or a single-argument Proc, which is called on it
-    # e.g.
+  class Predicate < Code
+
+    # you enter a nested hash where the branches define the execution path and
+    # the leaves either have a value (which will be compared with the actual
+    # value) or a single-argument Proc, which is called on it.
+    #
+    # For example:
     #   pry(main)> make_test({:to_a=> {:length=>5}}).call (1..4)
     #   => false
     #   pry(main)> make_test({:to_a=> {:length=>5}}).call (1..5)
@@ -12,7 +15,7 @@ module Gen
     def make_test_code(test_hash)
       input_var = local_var
       test_hash.map do |method, value|
-        [self.new_local_var("#{input_var}.#{method}"),
+        [new_local_var("#{input_var}.#{method}"),
         if value.is_a? Hash
           make_test_code(value)
         elsif value.is_a? Proc
@@ -20,13 +23,13 @@ module Gen
         else
           "return false unless #{bind_const value} ==   #{local_var} "
         end]
-      end.flatten << "return true"
+      end.flatten << 'return true'
     end
 
     # given a class, a name for the test (instance) method, and a test hash, generate a predicate
     def make_test(klass, test_name, test_hash)
-      test_code = self.make_test_code test_hash
-      test_code = self.proc_block test_code, 'x_0'
+      test_code = make_test_code test_hash
+      test_code = proc_block test_code, 'x_0'
 
       arg_vars  = []
       args      = []
@@ -39,7 +42,7 @@ module Gen
         args     << bound_const
       end
 
-      test_code = self.proc_block test_code, arg_vars.to_s.gsub(/[\[\]\"]/, '').freeze
+      test_code = proc_block test_code, arg_vars.to_s.gsub(/[\[\]\"]/, '').freeze
       klass.class_exec do
         define_method test_name, eval(test_code).call(*args)
       end
