@@ -22,3 +22,12 @@ env:
   global:
     - CC_TEST_REPORTER_ID=ebe8c89484407c039bfe9cd6c766dd415018d553f09c0acd606787f09bfd41a7
     - CF_RUN_PERM_SPECS=false
+
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/a47f3b0b8b0ddc96f09f
+    on_success: change
+    on_failure: always
+    on_start: never
+
