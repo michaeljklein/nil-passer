@@ -11,15 +11,18 @@ Minitest::Reporters.use! [
 
 
 require 'simplecov'
+require 'codacy-coverage'
+
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
+    SimpleCov::Formatter::HTMLFormatter,
+    Codacy::Formatter
+])
 
 SimpleCov.start do
   add_filter "/test/"
   add_group "Generators", (Dir["lib/gen/**/*.rb"] + ["lib/gen.rb"])
   add_group "Utils", "lib/utils"
 end
-
-
-require 'codacy-coverage'
 
 Codacy::Reporter.start
 
