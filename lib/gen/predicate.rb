@@ -50,7 +50,7 @@ module Gen
 
     # An alias of `#make_test`
     def self.make_test(klass, test_name, test_hash)
-      self.new.make_test klass, test_name, test_hash
+      self.new.make_test(klass, test_name, test_hash)
     end
   end
 end

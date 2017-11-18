@@ -25,7 +25,7 @@ class GenPredicateTest < Minitest::Test
     [[1,2,3], {:product=>[[1], [2], [3]], :first=>1, :reverse=>[3, 2, 1], :to_a=>{:last=>3, :join=>"123", :rotate=>[2, 3, 1]}, :uniq=>{:none? =>false, :minmax=>[1, 3]}}, true],
     [[1,2,3], {:product=>[[1], [2], [3]], :first=>1, :reverse=>[3, 2, 1], :to_a=>{:last=>3, :join=>"12", :rotate=>[2, 3, 1]}, :uniq=>{:none? =>false, :minmax=>[1, 3]}}, false],
     [{:hi=>"there"}, {:length=>1, :to_a=>[[:hi, "there"]], :flatten=>[:hi, "there"], :keys=>[:hi], :values=>["there"], :all? =>true, :one? =>true, :none? =>false, :zip=>[[[:hi, "there"]]]}, true],
-  ]
+  ].freeze
 
   def setup
     @test_cases = @@test_cases
@@ -39,4 +39,5 @@ class GenPredicateTest < Minitest::Test
       assert_equal result, obj.test_it(x), [x, hash, result]
     end
   end
+
 end
