@@ -10,6 +10,8 @@
 
 [![Gem Version](https://badge.fury.io/rb/nil-passer.svg)](https://badge.fury.io/rb/nil-passer)
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8ec82f7c480c412587116366b89189bf)](https://www.codacy.com/app/michaeljklein/nil-passer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=michaeljklein/nil-passer&amp;utm_campaign=Badge_Grade)
+
 
 ## Introduction
 

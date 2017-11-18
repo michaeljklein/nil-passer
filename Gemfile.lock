@@ -44,6 +44,8 @@ GEM
     ansi (1.5.0)
     arel (6.0.3)
     builder (3.2.2)
+    codacy-coverage (1.1.8)
+      simplecov
     coderay (1.1.1)
     concurrent-ruby (1.0.2)
     docile (1.1.5)
@@ -124,6 +126,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  codacy-coverage
   minitest-color
   minitest-reporters
   nil-passer!

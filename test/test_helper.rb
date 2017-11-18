@@ -18,3 +18,8 @@ SimpleCov.start do
   add_group "Utils", "lib/utils"
 end
 
+
+require 'codacy-coverage'
+
+Codacy::Reporter.start
+
