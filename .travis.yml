@@ -15,6 +15,15 @@ before_script:
 script:
   - bundle exec rake $TASKS
 
+gemfile:
+  - gemfiles/master.gemfile
+  - gemfiles/one.gemfile
+  - gemfiles/rails_4.gemfile
+  - gemfiles/3.2.22.gemfile
+  - gemfiles/4.2.1.gemfile
+  - gemfiles/5.0.0.gemfile
+
+
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
