@@ -59,3 +59,10 @@ jobs:
       - store_artifacts:
           path: /tmp/test-results
           destination: test-results
+
+dependencies:
+  post:
+    - bundle exec appraisal install
+test:
+  override:
+    - bundle exec appraisal rspec
