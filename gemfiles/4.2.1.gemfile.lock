@@ -1,5 +1,5 @@
 PATH
-  remote: .
+  remote: ..
   specs:
     nil-passer (0.2.0)
 
@@ -130,6 +130,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord (~> 4.2.1)
   appraisal
   codacy-coverage
   minitest-color
@@ -137,8 +138,11 @@ DEPENDENCIES
   nil-passer!
   pry
   rails
-  rake (>= 11.1)
+  rake
   simplecov
+
+RUBY VERSION
+   ruby 2.3.1p112
 
 BUNDLED WITH
    1.14.6
