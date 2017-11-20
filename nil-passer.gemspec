@@ -9,9 +9,4 @@ Gem::Specification.new do |s|
   s.files       = Dir["lib/**/*.rb"]
   s.homepage    = 'https://michaeljklein.github.io/nil-passer/'
   s.license     = 'MIT'
-
-  s.add_development_dependency "appraisal"
-  s.add_development_dependency 'pry'
-  s.add_development_dependency 'gemika'
-
 end

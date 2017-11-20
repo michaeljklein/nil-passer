@@ -5,7 +5,6 @@ gemspec
 gem 'rake', '>= 11.1'
 gem 'rails', '>= 4.2.7'
 gem 'rspec'
-
 gem 'appraisal'
 gem 'gemika'
 
