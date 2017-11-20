@@ -1,8 +1,5 @@
 
 appraise 'master' do
-  gem 'rake', '>= 11.1'
-  gem 'rails', '>= 4.2.7'
-  gem 'activerecord', '>= 3.2.22'
 end
 
 appraise "one" do
@@ -24,6 +21,7 @@ appraise "3.2.22" do
 
   # Development dependencies
   gem 'rake', '=10.0.4'
+  gem 'rails'
 end
 
 appraise "4.2.1" do

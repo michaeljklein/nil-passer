@@ -7,5 +7,12 @@ Rake::TestTask.new do |t|
   t.pattern = 'test/**/*_test.rb'
 end
 
+begin
+  require 'gemika/tasks'
+rescue LoadError
+  puts 'Run `gem install gemika` for additional tasks'
+end
+
 desc 'Run tests'
-task :default => :test
+task :default => 'matrix:spec'
+

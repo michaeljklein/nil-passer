@@ -4,10 +4,9 @@ source "https://rubygems.org"
 
 gem "rake", ">= 12.0"
 gem "rails", ">= 4.3.0"
-
-group :development, :test do
-  gem "pry"
-end
+gem "rspec"
+gem "appraisal"
+gem "gemika"
 
 group :test do
   gem "minitest-color"

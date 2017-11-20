@@ -3,11 +3,11 @@ source "https://rubygems.org"
 gemspec
 
 gem 'rake', '>= 11.1'
-gem 'rails'
+gem 'rails', '>= 4.2.7'
+gem 'rspec'
 
-group :development, :test do
-  gem 'pry'
-end
+gem 'appraisal'
+gem 'gemika'
 
 group :test do
   gem 'minitest-color'

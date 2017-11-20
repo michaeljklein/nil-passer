@@ -5,12 +5,11 @@ source "https://rubygems.org"
 ruby ">= 1.9.3"
 
 gem "rake"
-gem "rails"
+gem "rails", ">= 4.2.7"
+gem "rspec"
+gem "appraisal"
+gem "gemika"
 gem "activerecord", "~>4.2.1"
-
-group :development, :test do
-  gem "pry"
-end
 
 group :test do
   gem "minitest-color"
