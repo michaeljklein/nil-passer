@@ -16,7 +16,6 @@ script:
   - bundle exec rake $TASKS
 
 gemfile:
-  - Gemfile
   - gemfiles/1.gemfile
   - gemfiles/rails_4.gemfile
 
