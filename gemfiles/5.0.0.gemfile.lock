@@ -147,7 +147,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord (~> 5.0.0)
+  activerecord (>= 5.0.0)
   appraisal
   codacy-coverage
   gemika

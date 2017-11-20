@@ -28,7 +28,7 @@ appraise "4.2.1" do
   ruby '>= 1.9.3'
 
   # Runtime dependencies
-  gem 'activerecord', '~>4.2.1'
+  gem 'activerecord', '>= 4.2.1'
 
   # Development dependencies
   gem 'rake'
@@ -38,7 +38,7 @@ appraise "5.0.0" do
   ruby '>= 2.2'
 
   # Runtime dependencies
-  gem 'activerecord', '~>5.0.0'
+  gem 'activerecord', '>= 5.0.0'
 
   # Development dependencies
   gem 'rake'
