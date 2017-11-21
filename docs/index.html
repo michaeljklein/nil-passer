@@ -2,15 +2,21 @@
 <html>
   <head>
     <script src="raw.githubusercontent.com/jeromegn/DocumentUp/master/public/documentup.min.js"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-109852023-1"></script>
     <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments)};
+      gtag('js', new Date());
+      gtag('config', 'UA-109852023-1');
+      gtag('set', {'user_id': 'USER_ID'});
       DocumentUp.document({
         repo:  "michaeljklein/nil-passer",
         name: "Nil-Passer",
         twitter: [
-          "twitterhandlehere"
+          "mjdklein"
         ],
         afterRender: function(){
-          alert("Hello world!");
+          console.log('documentUp rendered');
         }
       });
     </script>
