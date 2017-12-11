@@ -23,7 +23,7 @@ This gem defines the [`NilPasser`](https://github.com/michaeljklein/nil-passer/b
 
 Each block passed is passed `nil` and the execution _usually_ continues normally. (Usually meaning you probably don't want to use this in production.)
 
-During or after execution, you can `grep -F '^[no_nil]'` on your logs to get all the results.
+During or after execution, you can `grep '^[no_nil]'` on your logs to get all the results.
 
 Loosely inspired by the [`bullet`](https://github.com/flyerhzm/bullet) gem.
 
